@@ -23,25 +23,25 @@ metadata {
 		capability "Security System"
 		//capability "Sensor"
         
-        // alarmSystemStatus[off, stay, away]
-        // securitySystemStatus[off, stay, away]
-        // alarm
+        // alarmSystemStatus[off, stay, away] - Alarm System capability
+        // securitySystemStatus[off, stay, away] - Security System capability
+        // alarm // Security System capability
         attribute "alarmStatus", "JSON_OBJECT"
-        attribute "isSystemReady", "BOOLEAN"
-        attribute "isFireAlarm", "BOOLEAN"
-        attribute "isIntrusionAlarm", "BOOLEAN"
-        attribute "isExitTimeDelay", "BOOLEAN"
-        attribute "isEntryTimeDelay", "BOOLEAN"
-        attribute "isZoneBypassEnabled", "BOOLEAN"
-        attribute "isChimeEnabled", "BOOLEAN"
+        attribute "systemReady", "BOOLEAN"
+        attribute "fireAlarm", "BOOLEAN"
+        attribute "intrusionAlarm", "BOOLEAN"
+        attribute "exitTimeDelay", "BOOLEAN"
+        attribute "entryTimeDelay", "BOOLEAN"
+        attribute "zoneBypassEnabled", "BOOLEAN"
+        attribute "chimeEnabled", "BOOLEAN"
         attribute "systemStatus", "STRING"
         attribute "zones", "JSON_OBJECT"
 
-        // configure
-        // refresh
-		// armStay
-        // armAway
-        // disarm
+        // configure - Configuration capability
+        // refresh - Refresh capability
+		// armStay - Security System capability
+        // armAway - Security System capability
+        // disarm - Security System capability
         command "chimeOn"
         command "chimeOff"
 	}
@@ -56,9 +56,9 @@ metadata {
 	}
 
 	tiles(scale: 2) {
-		// TODO: define your main and details tiles here
         /*
         Alarm related icons:
+        
         st.alarm.alarm.alarm
         st.alarm.beep.beep
         st.alarm.smoke.smoke
@@ -95,10 +95,9 @@ metadata {
             state "turningStay", label:"Turning stay", icon:"st.security.alarm.partial", backgroundColor:"#f1d801", nextState: "turningOff"
             state "turningOff", label:"Turning off", icon:"st.security.alarm.off", backgroundColor:"#ffffff", nextState: "turningStay"
         }
-
 /*
-        valueTile("systemReadyTile", "device.isSystemReady", width: 2, height: 2, decoration: "flat") {
-            state("isSystemReady", label:'${currentValue}', backgroundColor: "#cccccc",
+        valueTile("systemReadyTile", "device.systemReady", width: 2, height: 2, decoration: "flat") {
+            state("systemReady", label:'${currentValue}', backgroundColor: "#cccccc",
             	backgroundColors:[
                     [value: "true", color: "#00a0dc"],
                     [value: "false", color: "#ffffff"]
@@ -106,39 +105,39 @@ metadata {
             )
         }
 */
-        standardTile("systemReadyTile", "device.isSystemReady", width: 2, height: 2, decoration: "flat") {
+        standardTile("systemReadyTile", "device.systemReady", width: 2, height: 2, decoration: "flat") {
             state("false", label:"System Ready", backgroundColor: "#cccccc", defaultState: true)
             state("true", label:"System Ready", backgroundColor: "#44b621")
         }
         
-        standardTile("intrusionAlarmTile", "device.isIntrusionAlarm", width: 2, height: 2, decoration: "flat") {
+        standardTile("intrusionAlarmTile", "device.intrusionAlarm", width: 2, height: 2, decoration: "flat") {
             state("false", label:"Intrusion Alarm", backgroundColor: "#cccccc", defaultState: true)
             state("true", label:"Intrusion Alarm", backgroundColor: "#e86d13")
         }
 
-        standardTile("fireAlarmTile", "device.isFireAlarm", width: 2, height: 2, decoration: "flat") {
+        standardTile("fireAlarmTile", "device.fireAlarm", width: 2, height: 2, decoration: "flat") {
             state("false", label:"Fire Alarm", backgroundColor: "#cccccc", defaultState: true)
             state("true", label:"Fire Alarm", backgroundColor: "#e86d13")
         }
        
-        standardTile("chimeTile", "device.isChimeEnabled", width: 2, height: 2, decoration: "flat", canChangeIcon: true) {
+        standardTile("chimeTile", "device.chimeEnabled", width: 2, height: 2, decoration: "flat", canChangeIcon: true) {
             state "false", label: "Chime", action: "chimeOn", icon: "st.quirky.spotter.quirky-spotter-sound-off", backgroundColor: "#ffffff", defaultState: true, nextState: "turningOn"
             state "true", label: "Chime", action: "chimeOff", icon: "st.alarm.beep.beep", backgroundColor: "#00a0dc", nextState: "turningOff"
             state "turningOn", label:"Turning on", icon:"st.alarm.beep.beep", backgroundColor:"#00a0dc", nextState: "turningOff"
             state "turningOff", label:"Turning off", icon:"st.quirky.spotter.quirky-spotter-sound-off", backgroundColor:"#ffffff", nextState: "turningOn"
         }
         
-        standardTile("exitTimeDelayTile", "device.isExitTimeDelay", width: 2, height: 2, decoration: "flat") {
+        standardTile("exitTimeDelayTile", "device.exitTimeDelay", width: 2, height: 2, decoration: "flat") {
             state("false", label:"Exit Time Delay", backgroundColor: "#cccccc", defaultState: true)
             state("true", label:"Exit Time Delay", backgroundColor: "#00a0dc")
         }
         
-        standardTile("entryTimeDelayTile", "device.isEntryTimeDelay", width: 2, height: 2, decoration: "flat") {
+        standardTile("entryTimeDelayTile", "device.entryTimeDelay", width: 2, height: 2, decoration: "flat") {
             state("false", label:"Entry Time Delay", backgroundColor: "#cccccc", defaultState: true)
             state("true", label:"Entry Time Delay", backgroundColor: "#00a0dc")
         }
         
-        standardTile("zoneBypassEnabledTile", "device.isZoneBypassEnabled", width: 2, height: 2, decoration: "flat") {
+        standardTile("zoneBypassEnabledTile", "device.zoneBypassEnabled", width: 2, height: 2, decoration: "flat") {
             state("false", label:"Zone Bypass", backgroundColor: "#cccccc", defaultState: true)
             state("true", label:"Zone Bypass", backgroundColor: "#00a0dc")
         }
@@ -147,11 +146,10 @@ metadata {
             state "refresh", label:"Refresh", action:"refresh", icon:"st.secondary.refresh"
         }
             
-        // The "switchTile" will be main tile, displayed in the "Things" view
+        // The main tile, displayed in the "Things" view
         main("alarmSystemTile")
 
-        // the "switch" and "power" tiles will appear in the Device Details
-        // view (order is left-to-right, top-to-bottom)
+        // The tiles will appear in the Device Details view (order is left-to-right, top-to-bottom)
         details(["alarmSystemTile", "armAwayTile", "armStayTile", "systemReadyTile", "intrusionAlarmTile", "fireAlarmTile", "chimeTile", "exitTimeDelayTile", "entryTimeDelayTile", "zoneBypassEnabledTile", "refreshTile"])
 	}
 }
@@ -166,7 +164,7 @@ def updated() {
     initialize()
 }
 
-// NOT USED I THINK, test it
+// NOT USED I THINK, test if the system call it. (https://docs.smartthings.com/en/latest/smartapp-developers-guide/scheduling.html?highlight=initialized)
 def initialized() {
 	log.debug "Executing 'initialized'"
 }
@@ -176,7 +174,7 @@ def initialize() {
 
 	unschedule()
     
-    //schedule("5 * * * * ?", myCommand) // Min. 1 minute limited by the system
+    //schedule("5 * * * * ?", getAlarmStatus) // Min. 1 minute - limited by the system
     runEvery1Minute(getAlarmStatus)
 }
 
@@ -234,8 +232,7 @@ def both() {
 	log.debug "Executing 'both'"
 	// TODO: handle 'both' command
 }
-*/
-/*
+
 def sendEvent(alarmSystemStatus,off)() {
 	log.debug "Executing 'sendEvent(alarmSystemStatus,off)'"
 	// TODO: handle 'sendEvent(alarmSystemStatus,off)' command
@@ -261,16 +258,17 @@ def configure() {
 def poll() {
 	log.debug "Executing 'poll'"
 	// TODO: handle 'poll' command
-    myCommand()
+    getAlarmStatus()
 }
 */
+
 def refresh() {
 	log.debug "Executing 'refresh'"
     getAlarmStatus()
     
-    /*
-    // To the parse() function get called, no callback function must be present, and the deviceNetworkId must be UPPERCASE and
+    // For the parse() function get called, no callback function must be present, and the deviceNetworkId must be UPPERCASE and
     // set to MAC address (without colons) or IP address:port (HEX IP : 4 digits HEX port) must be used (ex: C0A8020A:0253).
+    /*
     def action = new physicalgraph.device.HubAction([
         method: "GET",
         path: "/Alarm/Status",
@@ -305,13 +303,13 @@ def disarm() {
 def chimeOn() {
 	log.debug "Executing 'chimeOn'"
     postAlarmOperation("/Alarm/Chime")
-    sendEvent(name: "isChimeEnabled", value: true)
+    sendEvent(name: "chimeEnabled", value: true)
 }
 
 def chimeOff() {
 	log.debug "Executing 'chimeOff'"
     postAlarmOperation("/Alarm/Chime")
-    sendEvent(name: "isChimeEnabled", value: false)
+    sendEvent(name: "chimeEnabled", value: false)
 }
 
 def getAlarmStatus() {
@@ -348,6 +346,7 @@ def getAlarmStatus() {
 void alarmStatusHandler(physicalgraph.device.HubResponse hubResponse) {
     log.debug "Entered alarmStatusHandler()..."
 
+	sendAlarmStatusEvents(hubResponse.json)
 /*
     log.debug "hubResponse: " + hubResponse
     log.debug "body: " + hubResponse.body
@@ -360,28 +359,24 @@ void alarmStatusHandler(physicalgraph.device.HubResponse hubResponse) {
     log.debug "json: " + hubResponse.json
     log.debug "status: " + hubResponse.status
     log.debug "xml: " + hubResponse.xml
-*/
 
-	sendAlarmStatusEvents(hubResponse.json)
-
-/*
 	if (hubResponse.json) {
     	log.debug "json ok"
         
         sendEvent(name: "alarmStatus", value: hubResponse.json)
         sendEvent(name: "alarmSystemStatus", value: hubResponse.json.armType)
         sendEvent(name: "securitySystemStatus", value: hubResponse.json.armType)
-        sendEvent(name: "isSystemReady", value: hubResponse.json.isSystemReady)
-        sendEvent(name: "isFireAlarm", value: hubResponse.json.isFireAlarm)
-        sendEvent(name: "isIntrusionAlarm", value: hubResponse.json.isIntrusionAlarm)
-        sendEvent(name: "isExitTimeDelay", value: hubResponse.json.isExitTimeDelay)
-        sendEvent(name: "isEntryTimeDelay", value: hubResponse.json.isEntryTimeDelay)
-        sendEvent(name: "isZoneBypassEnabled", value: hubResponse.json.isZoneBypassEnabled)
-        sendEvent(name: "isChimeEnabled", value: hubResponse.json.isChimeEnabled)
+        sendEvent(name: "systemReady", value: hubResponse.json.isSystemReady)
+        sendEvent(name: "fireAlarm", value: hubResponse.json.isFireAlarm)
+        sendEvent(name: "intrusionAlarm", value: hubResponse.json.isIntrusionAlarm)
+        sendEvent(name: "exitTimeDelay", value: hubResponse.json.isExitTimeDelay)
+        sendEvent(name: "entryTimeDelay", value: hubResponse.json.isEntryTimeDelay)
+        sendEvent(name: "zoneBypassEnabled", value: hubResponse.json.isZoneBypassEnabled)
+        sendEvent(name: "chimeEnabled", value: hubResponse.json.isChimeEnabled)
         sendEvent(name: "systemStatus", value: hubResponse.json.systemStatus)
         sendEvent(name: "zones", value: hubResponse.json.zones)
        
-        if (hubResponse.json.isFireAlarm || hubResponse.json.isIntrusionAlarm)
+        if (hubResponse.json.fireAlarm || hubResponse.json.intrusionAlarm)
         {
         	sendEvent(name: "alarm", value: true)
         } else {
@@ -417,7 +412,7 @@ def postAlarmOperation(path) {
 void alarmOperationHandler(physicalgraph.device.HubResponse hubResponse) {
     log.debug "Entered alarmOperationHandler()..."
     
-  log.debug "hubResponse: " + hubResponse
+    log.debug "hubResponse: " + hubResponse
     log.debug "body: " + hubResponse.body
     log.debug "data: " + hubResponse.data
     log.debug "description: " + hubResponse.description
@@ -430,24 +425,24 @@ void alarmOperationHandler(physicalgraph.device.HubResponse hubResponse) {
     log.debug "xml: " + hubResponse.xml
 
 	sendAlarmStatusEvents(hubResponse.json)
-
-/*	if (hubResponse.json) {
+/*
+	if (hubResponse.json) {
     	log.debug "json ok"
         
         sendEvent(name: "alarmStatus", value: hubResponse.json)
         sendEvent(name: "alarmSystemStatus", value: hubResponse.json.armType)
         sendEvent(name: "securitySystemStatus", value: hubResponse.json.armType)
-        sendEvent(name: "isSystemReady", value: hubResponse.json.isSystemReady)
-        sendEvent(name: "isFireAlarm", value: hubResponse.json.isFireAlarm)
-        sendEvent(name: "isIntrusionAlarm", value: hubResponse.json.isIntrusionAlarm)
-        sendEvent(name: "isExitTimeDelay", value: hubResponse.json.isExitTimeDelay)
-        sendEvent(name: "isEntryTimeDelay", value: hubResponse.json.isEntryTimeDelay)
-        sendEvent(name: "isZoneBypassEnabled", value: hubResponse.json.isZoneBypassEnabled)
-        sendEvent(name: "isChimeEnabled", value: hubResponse.json.isChimeEnabled)
+        sendEvent(name: "systemReady", value: hubResponse.json.isSystemReady)
+        sendEvent(name: "fireAlarm", value: hubResponse.json.isFireAlarm)
+        sendEvent(name: "intrusionAlarm", value: hubResponse.json.isIntrusionAlarm)
+        sendEvent(name: "exitTimeDelay", value: hubResponse.json.isExitTimeDelay)
+        sendEvent(name: "entryTimeDelay", value: hubResponse.json.isEntryTimeDelay)
+        sendEvent(name: "zoneBypassEnabled", value: hubResponse.json.isZoneBypassEnabled)
+        sendEvent(name: "chimeEnabled", value: hubResponse.json.isChimeEnabled)
         sendEvent(name: "systemStatus", value: hubResponse.json.systemStatus)
         sendEvent(name: "zones", value: hubResponse.json.zones)
        
-        if (hubResponse.json.isFireAlarm || hubResponse.json.isIntrusionAlarm)
+        if (hubResponse.json.fireAlarm || hubResponse.json.intrusionAlarm)
         {
         	sendEvent(name: "alarm", value: true)
         } else {
@@ -461,23 +456,23 @@ def sendAlarmStatusEvents(jsonStatus) {
  	log.debug "Entered sendAlarmStatusEvents()..."
     log.debug "jsonStatus: " + jsonStatus
     
-	 if (jsonStatus) {
+	if (jsonStatus) {
     	log.debug "jsonStatus ok"
         
-        sendEvent(name: "alarmStatus", value: jsonStatus)
+        //sendEvent(name: "alarmStatus", value: jsonStatus)
         sendEvent(name: "alarmSystemStatus", value: jsonStatus.armType)
         sendEvent(name: "securitySystemStatus", value: jsonStatus.armType)
-        sendEvent(name: "isSystemReady", value: jsonStatus.isSystemReady)
-        sendEvent(name: "isFireAlarm", value: jsonStatus.isFireAlarm)
-        sendEvent(name: "isIntrusionAlarm", value: jsonStatus.isIntrusionAlarm)
-        sendEvent(name: "isExitTimeDelay", value: jsonStatus.isExitTimeDelay)
-        sendEvent(name: "isEntryTimeDelay", value: jsonStatus.isEntryTimeDelay)
-        sendEvent(name: "isZoneBypassEnabled", value: jsonStatus.isZoneBypassEnabled)
-        sendEvent(name: "isChimeEnabled", value: jsonStatus.isChimeEnabled)
+        sendEvent(name: "systemReady", value: jsonStatus.isSystemReady)
+        sendEvent(name: "fireAlarm", value: jsonStatus.isFireAlarm)
+        sendEvent(name: "intrusionAlarm", value: jsonStatus.isIntrusionAlarm)
+        sendEvent(name: "exitTimeDelay", value: jsonStatus.isExitTimeDelay)
+        sendEvent(name: "entryTimeDelay", value: jsonStatus.isEntryTimeDelay)
+        sendEvent(name: "zoneBypassEnabled", value: jsonStatus.isZoneBypassEnabled)
+        sendEvent(name: "chimeEnabled", value: jsonStatus.isChimeEnabled)
         sendEvent(name: "systemStatus", value: jsonStatus.systemStatus)
-        sendEvent(name: "zones", value: jsonStatus.zones)
+        //sendEvent(name: "zones", value: jsonStatus.zones)
         
-        if (jsonStatus.isFireAlarm || jsonStatus.isIntrusionAlarm)
+        if (jsonStatus.fireAlarm || jsonStatus.intrusionAlarm)
         {
         	sendEvent(name: "alarm", value: true)
         } else {
