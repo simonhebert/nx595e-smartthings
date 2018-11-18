@@ -25,7 +25,7 @@ metadata {
         
         // alarmSystemStatus[off, stay, away] - Alarm System capability
         // securitySystemStatus[off, stay, away] - Security System capability
-        // alarm // Security System capability
+        // alarm - Security System capability
         attribute "alarmStatus", "JSON_OBJECT"
         attribute "systemReady", "BOOLEAN"
         attribute "fireAlarm", "BOOLEAN"
