@@ -21,11 +21,18 @@ metadata {
         //capability "Polling"
         capability "Refresh"
 		capability "Security System"
-		//capability "Sensor"
+        capability "Contact Sensor"
+        capability "Motion Sensor"
+        capability "Presence Sensor"
+        capability "Smoke Detector"
         
         // alarmSystemStatus[off, stay, away] - Alarm System capability
         // securitySystemStatus[off, stay, away] - Security System capability
         // alarm - Security System capability
+        // contact - Contact Sensor capability
+        // motion - Motion Sensor capability
+        // presence - Presence Sensor capability
+        // smoke - Smoke Detector capability
         attribute "alarmStatus", "JSON_OBJECT"
         attribute "systemReady", "BOOLEAN"
         attribute "fireAlarm", "BOOLEAN"
@@ -472,12 +479,30 @@ def sendAlarmStatusEvents(jsonStatus) {
         sendEvent(name: "systemStatus", value: jsonStatus.systemStatus)
         //sendEvent(name: "zones", value: jsonStatus.zones)
         
+        if (jsonStatus.isSystemReady)
+        {
+        	sendEvent(name: "contact", value: 'closed')
+        	sendEvent(name: "motion", value: 'inactive')
+        	sendEvent(name: "presence", value: 'not present')
+        } else {
+        	sendEvent(name: "contact", value: 'open')
+        	sendEvent(name: "motion", value: 'active')
+        	sendEvent(name: "presence", value: 'present')
+        }
+        
+        if (jsonStatus.fireAlarm)
+        {
+        	sendEvent(name: "smoke", value: 'detected')
+        } else {
+        	sendEvent(name: "smoke", value: 'clear')
+        }        
+        
         if (jsonStatus.fireAlarm || jsonStatus.intrusionAlarm)
         {
         	sendEvent(name: "alarm", value: true)
         } else {
         	sendEvent(name: "alarm", value: false)
-        }
+        }        
     }
 }
 
