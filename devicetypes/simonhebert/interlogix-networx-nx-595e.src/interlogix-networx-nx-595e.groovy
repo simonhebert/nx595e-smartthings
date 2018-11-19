@@ -14,11 +14,8 @@
  */
 metadata {
 	definition (name: "Interlogix NetworX NX-595E", namespace: "simonhebert", author: "Simon Hebert") {
-		//capability "Actuator"
-		//capability "Alarm"
 		capability "Alarm System"
 		capability "Configuration"
-        //capability "Polling"
         capability "Refresh"
 		capability "Security System"
         capability "Contact Sensor"
@@ -219,55 +216,10 @@ def parse(String description) {
 }
 
 // handle commands
-/*
-def off() {
-	log.debug "Executing 'off'"
-	// TODO: handle 'off' command
-}
-
-def strobe() {
-	log.debug "Executing 'strobe'"
-	// TODO: handle 'strobe' command
-}
-
-def siren() {
-	log.debug "Executing 'siren'"
-	// TODO: handle 'siren' command
-}
-
-def both() {
-	log.debug "Executing 'both'"
-	// TODO: handle 'both' command
-}
-
-def sendEvent(alarmSystemStatus,off)() {
-	log.debug "Executing 'sendEvent(alarmSystemStatus,off)'"
-	// TODO: handle 'sendEvent(alarmSystemStatus,off)' command
-}
-
-def sendEvent(alarmSystemStatus,stay)() {
-	log.debug "Executing 'sendEvent(alarmSystemStatus,stay)'"
-	// TODO: handle 'sendEvent(alarmSystemStatus,stay)' command
-}
-
-def sendEvent(alarmSystemStatus,away)() {
-	log.debug "Executing 'sendEvent(alarmSystemStatus,away)'"
-	// TODO: handle 'sendEvent(alarmSystemStatus,away)' command
-}
-*/
-
 def configure() {
 	log.debug "Executing 'configure'"
     initialize()
 }
-
-/*
-def poll() {
-	log.debug "Executing 'poll'"
-	// TODO: handle 'poll' command
-    getAlarmStatus()
-}
-*/
 
 def refresh() {
 	log.debug "Executing 'refresh'"
