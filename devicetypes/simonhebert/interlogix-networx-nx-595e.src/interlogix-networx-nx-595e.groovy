@@ -13,7 +13,7 @@
  *  for the specific language governing permissions and limitations under the License.
  */
 metadata {
-	definition (name: "Interlogix NetworX NX-595E", namespace: "simonhebert", author: "Simon Hebert", ocfDeviceType: "x.com.st.securitypanel", mnmn: "SmartThings", vid: "generic-contact-2") {
+	definition (name: "Interlogix NetworX NX-595E", namespace: "simonhebert", author: "Simon Hebert", ocfDeviceType: "x.com.st.securitypanel", mnmn: "SmartThings", vid: "generic-contact-4") {
 		capability "Alarm System"
 		capability "Configuration"
         capability "Refresh"
@@ -22,8 +22,8 @@ metadata {
         capability "Motion Sensor"
         capability "Presence Sensor"
         capability "Smoke Detector"
-        capability "Health Check"
         /* The “Device Health” feature only applies to devices that support the “Health Check” capability and it uses the “checkInterval” attribute to determine the maximum number of seconds the device can go without generating new events. */
+        //capability "Health Check"
         
         // alarmSystemStatus[off, stay, away] - Alarm System capability
         // securitySystemStatus[off, stay, away] - Security System capability
@@ -177,6 +177,8 @@ def initialized() {
 
 def initialize() {
 	log.debug "Executing 'initialize'"
+
+	//sendEvent(name: "checkInterval", value: 4 * 60 * 60 + 2 * 60, displayed: false, data: [protocol: "cloud", scheme:"untracked"])
 
 	unschedule()
     
