@@ -13,7 +13,7 @@
  *  for the specific language governing permissions and limitations under the License.
  */
 metadata {
-	definition (name: "Interlogix NetworX NX-595E", namespace: "simonhebert", author: "Simon Hebert") {
+	definition (name: "Interlogix NetworX NX-595E", namespace: "simonhebert", author: "Simon Hebert", ocfDeviceType: "x.com.st.securitypanel", mnmn: "SmartThings", vid: "generic-contact-2") {
 		capability "Alarm System"
 		capability "Configuration"
         capability "Refresh"
@@ -22,6 +22,8 @@ metadata {
         capability "Motion Sensor"
         capability "Presence Sensor"
         capability "Smoke Detector"
+        capability "Health Check"
+        /* The “Device Health” feature only applies to devices that support the “Health Check” capability and it uses the “checkInterval” attribute to determine the maximum number of seconds the device can go without generating new events. */
         
         // alarmSystemStatus[off, stay, away] - Alarm System capability
         // securitySystemStatus[off, stay, away] - Security System capability
@@ -30,7 +32,7 @@ metadata {
         // motion - Motion Sensor capability
         // presence - Presence Sensor capability
         // smoke - Smoke Detector capability
-        attribute "alarmStatus", "JSON_OBJECT"
+        //attribute "alarmStatus", "JSON_OBJECT"
         attribute "systemReady", "BOOLEAN"
         attribute "fireAlarm", "BOOLEAN"
         attribute "intrusionAlarm", "BOOLEAN"
@@ -39,7 +41,7 @@ metadata {
         attribute "zoneBypassEnabled", "BOOLEAN"
         attribute "chimeEnabled", "BOOLEAN"
         attribute "systemStatus", "STRING"
-        attribute "zones", "JSON_OBJECT"
+        //attribute "zones", "JSON_OBJECT"
 
         // configure - Configuration capability
         // refresh - Refresh capability
@@ -269,6 +271,11 @@ def chimeOff() {
 	log.debug "Executing 'chimeOff'"
     postAlarmOperation("/Alarm/Chime")
     sendEvent(name: "chimeEnabled", value: false)
+}
+
+def ping() {
+	log.debug "Executing 'ping'"
+    getAlarmStatus()
 }
 
 def getAlarmStatus() {
