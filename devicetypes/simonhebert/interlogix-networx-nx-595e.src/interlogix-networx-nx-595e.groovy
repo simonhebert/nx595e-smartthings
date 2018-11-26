@@ -179,7 +179,8 @@ def initialize() {
 	log.debug "Executing 'initialize'"
 
 	//sendEvent(name: "checkInterval", value: 4 * 60 * 60 + 2 * 60, displayed: false, data: [protocol: "cloud", scheme:"untracked"])
-
+	//sendEvent(name: "checkInterval", value: 2 * 15 * 60 + 2 * 60, displayed: false, data: [protocol: "zwave", hubHardwareId: device.hub.hardwareID])
+    
 	unschedule()
     
     //schedule("5 * * * * ?", getAlarmStatus) // Min. 1 minute - limited by the system
