@@ -20,7 +20,6 @@ metadata {
 		capability "Security System"
         capability "Contact Sensor"
         capability "Motion Sensor"
-        capability "Presence Sensor"
         capability "Smoke Detector"
         /* The “Device Health” feature only applies to devices that support the “Health Check” capability and it uses the “checkInterval” attribute to determine the maximum number of seconds the device can go without generating new events. */
         //capability "Health Check"
@@ -30,7 +29,6 @@ metadata {
         // alarm - Security System capability
         // contact - Contact Sensor capability
         // motion - Motion Sensor capability
-        // presence - Presence Sensor capability
         // smoke - Smoke Detector capability
         //attribute "alarmStatus", "JSON_OBJECT"
         attribute "systemReady", "BOOLEAN"
@@ -362,9 +360,10 @@ def postAlarmOperation(path) {
         def action = new physicalgraph.device.HubAction([
             method: "POST",
             path: path,
-            headers: [
-                HOST: getHostAddress()
-            ]]
+			headers: [ 
+                HOST: getHostAddress(), 
+                "Transfer-Encoding": "chunked"
+        	]]
            	,device.deviceNetworkId
            	,[callback: "alarmOperationHandler"]
         )
@@ -445,11 +444,9 @@ def sendAlarmStatusEvents(jsonStatus) {
         {
         	sendEvent(name: "contact", value: 'closed')
         	sendEvent(name: "motion", value: 'inactive')
-        	sendEvent(name: "presence", value: 'not present')
         } else {
         	sendEvent(name: "contact", value: 'open')
         	sendEvent(name: "motion", value: 'active')
-        	sendEvent(name: "presence", value: 'present')
         }
         
         if (jsonStatus.fireAlarm)
