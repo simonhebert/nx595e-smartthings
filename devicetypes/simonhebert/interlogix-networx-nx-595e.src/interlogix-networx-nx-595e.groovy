@@ -13,7 +13,7 @@
  *  for the specific language governing permissions and limitations under the License.
  */
 metadata {
-	definition (name: "Interlogix NetworX NX-595E", namespace: "simonhebert", author: "Simon Hebert", ocfDeviceType: "x.com.st.securitypanel", mnmn: "SmartThings", vid: "generic-contact-4") {
+	definition (name: "Interlogix NetworX NX-595E", namespace: "simonhebert", author: "Simon Hebert", ocfDeviceType: "x.com.st.securitypanel", mnmn: "SmartThings", vid: "generic-switch") {
 		capability "Alarm System"
 		capability "Configuration"
         capability "Refresh"
