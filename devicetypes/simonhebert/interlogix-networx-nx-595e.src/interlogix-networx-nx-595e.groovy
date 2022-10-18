@@ -31,7 +31,7 @@ metadata {
         //capability "Health Check"
         
         // alarmSystemStatus[off, stay, away] - Alarm System capability
-        // securitySystemStatus[off, stay, away] - Security System capability
+        // securitySystemStatus[disarmed, armedStay, armedAway] - Security System capability
         // alarm - Security System capability
         // contact - Contact Sensor capability
         // motion - Motion Sensor capability
@@ -250,22 +250,35 @@ def refresh() {
     */
 }
 
-def armStay() {
-	log.debug "Executing 'armStay'"
-    postAlarmOperation("/Alarm/Arm/stay")    
-    sendEvent(name: "alarmSystemStatus", value: 'stay')
-}
-
 def armAway() {
 	log.debug "Executing 'armAway'"
     postAlarmOperation("/Alarm/Arm/away")    
-    sendEvent(name: "alarmSystemStatus", value: 'away')
+    //sendEvent(name: "alarmSystemStatus", value: 'away')
+    sendEvent(name: "securitySystemStatus", value: "armedAway");
+}
+
+def armAway(boolean bypassAll) {
+	log.debug "Executing 'armAway(boolean bypassAll)'"
+	armAway()
+}
+
+def armStay() {
+	log.debug "Executing 'armStay'"
+    postAlarmOperation("/Alarm/Arm/stay")    
+    //sendEvent(name: "alarmSystemStatus", value: 'stay')
+    sendEvent(name: "securitySystemStatus", value: "armedStay");
+}
+
+def armStay(bypassAll) {
+	log.debug "Executing 'armStay(bypassAll)'"
+	armStay()
 }
 
 def disarm() {
 	log.debug "Executing 'disarm'"
     postAlarmOperation("/Alarm/Arm/off")
-    sendEvent(name: "alarmSystemStatus", value: 'off')
+    //sendEvent(name: "alarmSystemStatus", value: 'off')
+    sendEvent(name: "securitySystemStatus", value: "disarmed");
 }
 
 def chimeOn() {
@@ -434,8 +447,8 @@ def sendAlarmStatusEvents(jsonStatus) {
     	log.debug "jsonStatus ok"
         
         //sendEvent(name: "alarmStatus", value: jsonStatus)
-        sendEvent(name: "alarmSystemStatus", value: jsonStatus.armType)
-        sendEvent(name: "securitySystemStatus", value: jsonStatus.armType)
+        //sendEvent(name: "alarmSystemStatus", value: jsonStatus.armType)
+        //sendEvent(name: "securitySystemStatus", value: jsonStatus.armType)
         sendEvent(name: "systemReady", value: jsonStatus.isSystemReady)
         sendEvent(name: "fireAlarm", value: jsonStatus.isFireAlarm)
         sendEvent(name: "intrusionAlarm", value: jsonStatus.isIntrusionAlarm)
@@ -445,6 +458,18 @@ def sendAlarmStatusEvents(jsonStatus) {
         sendEvent(name: "chimeEnabled", value: jsonStatus.isChimeEnabled)
         sendEvent(name: "systemStatus", value: jsonStatus.systemStatus)
         //sendEvent(name: "zones", value: jsonStatus.zones)
+        
+        switch (jsonStatus.armType) {
+            case "away":
+                sendEvent(name: "securitySystemStatus", value: "armedAway");
+                break;
+             case "stay":
+                sendEvent(name: "securitySystemStatus", value: "armedStay");
+                break;
+            case "off":
+                sendEvent(name: "securitySystemStatus", value: "disarmed");
+                break;
+        }
         
         if (jsonStatus.isSystemReady)
         {
@@ -462,12 +487,14 @@ def sendAlarmStatusEvents(jsonStatus) {
         	sendEvent(name: "smoke", value: 'clear')
         }        
         
-        if (jsonStatus.fireAlarm || jsonStatus.intrusionAlarm)
+        if (jsonStatus.intrusionAlarm)
         {
-        	sendEvent(name: "alarm", value: true)
+        	sendEvent(name: "alarm", value: 'Intrusion')
+        } else if (jsonStatus.fireAlarm) {
+        	sendEvent(name: "alarm", value: 'Fire')        	
         } else {
-        	sendEvent(name: "alarm", value: false)
-        }        
+        	sendEvent(name: "alarm", value: '')
+        }
     }
 }
 
@@ -492,7 +519,7 @@ private getHostAddress() {
         def port = getDataValue("port")
 
         if (!ip || !port) {
-            def parts = device.deviceNetworkId.split(":")
+            def parts = device.deviceNetworkId.split(":") // C0A8020A:0253
             if (parts.length == 2) {
                 ip = parts[0]
                 port = parts[1]
